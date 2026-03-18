@@ -13,7 +13,12 @@ func WithLogger(ctx context.Context, log Logger) context.Context {
 
 // FromContext retrieves the logger from the context. If no logger is found, it returns a NoopLogger.
 func FromContext(ctx context.Context) Logger {
-	if log, ok := ctx.Value(loggerKey).(Logger); ok {
+	val := ctx.Value(loggerKey)
+	if val == nil {
+		return NoopLogger()
+	}
+
+	if log, ok := val.(Logger); ok {
 		return log
 	}
 	return NoopLogger()
